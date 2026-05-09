@@ -1,5 +1,7 @@
 import random
 data = []
+score = 0
+guessed = []
 
 files = open("countries.txt", 'r')
 if files == None:
@@ -9,41 +11,58 @@ if files == None:
 for line in files.readlines():
 	data.append(line.strip())
 
-word = random.choice(data).lower()
-print(word)
-display = ["_"] * len(word) # to get the total words and display them in _ format
-
-number_of_guess = 0
-while "_" in display and number_of_guess < 3:
-
-	guesses = input("enter one letter(guess): ").lower()
-	if not guesses.isalpha():
-		if (3 - number_of_guess) == 1:
-			break
+exit_game = False
+while not exit_game:
+	word = random.choice(data).lower().strip()
+	guessed = []
+	print(word)
+	# display = ["_"] * len(word)
+	display = []
+	for char in word:
+		if char in [" ", "-", "{", "}"]:
+			display.append(char)
 		else:
+			display.append("_")
+	print(" ".join(display)) # to get the total words and display them in _ format
+
+	number_of_guess = 0
+	while "_" in display and number_of_guess < 3:
+
+		guesses = input("enter one letter(guess): ").lower()
+		if guesses == "exit":
+			exit_game = True
+			break
+		if not guesses.isalpha():
 			print("stop trying to break my code and enter a letter only, t for thanks")
 			number_of_guess += 1
 			print(f"You have {(3 - number_of_guess)} more trials")
 			continue
-	if len(guesses) != 1:
-		print("can't you read, i said enter only one letter")
-		number_of_guess += 1
-		print(f"You have {(3 - number_of_guess)} more trials")
-		continue
-	if guesses not in word:
-		number_of_guess += 1
-		print(f"You have {(3 - number_of_guess)} more trials")
-	elif guesses in word:
-		for i in range(len(word)):
-			if word[i].lower() == guesses.lower():
-				display[i] = word[i]
-		print(" ".join(display))
+		if len(guesses) != 1:
+			print("can't you read, i said enter only one letter")
+			number_of_guess += 1
+			print(f"You have {(3 - number_of_guess)} more trials")
+			continue
+		if guesses in guessed:
+			print(f"you have guessed this word before try again")
+			continue
+		guessed.append(guesses)
+		if guesses not in word.replace(" ", "").replace("-", "").replace("{", "").replace("}", ""):
+			number_of_guess += 1
+			print(f"You have {(3 - number_of_guess)} more trials")
+		elif guesses in word.replace(" ", "").replace("-", "").replace("{", "").replace("}", ""):
+			for i in range(len(word)):
+				if word[i].lower() == guesses.lower():
+					display[i] = word[i]
+			print(" ".join(display))
 
 
-if "_" not in display:
-	print(f"You won")
-else:
-	print(f"You lost, the country was {word}")
+	if "_" not in display:
+		score += 1
+		print(f"You won, your score is {score}\n")
+	elif exit_game == True:
+		print(f"Thanks for playing, your total score is {score}")
+	else:
+		print(f"You lost, the country was {word}")
 
 
 
