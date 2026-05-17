@@ -45,7 +45,9 @@ while not exit_game:
 		if guesses in guessed:
 			print(f"you have guessed this word before try again")
 			continue
+
 		guessed.append(guesses)
+		
 		if guesses not in word.replace(" ", "").replace("-", "").replace("{", "").replace("}", ""):
 			number_of_guess += 1
 			print(f"You have {(3 - number_of_guess)} more trials")
