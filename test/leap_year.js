@@ -14,4 +14,4 @@ const leapYear = (num) => {
 	return leap;
 };
 
-console.log(leapYear("abc"));
+console.log(leapYear(2000));
