@@ -5,3 +5,5 @@ value = student_marks[query_name]
 
 average = (sum(value) / len(value))
 print(f"{average:.2f}")
+# print(f"\'\"This is Edosa's code\'\"")
+
