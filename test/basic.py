@@ -1,6 +1,5 @@
 arr = []
 
-
 lenght = int(input("Enter the range "))
 
 for i in range(lenght):
@@ -14,10 +13,10 @@ for i in range(lenght):
 		print(arr)
 	elif command.startswith("rem"):
 		a = command.split(" ")[1]
-		arr.remove(a)
+		arr.remove(int(a))
 	elif command.startswith("a"):
 		a = command.split(" ")[1]
-		arr.append(a)
+		arr.append(int(a))
 	elif command == "s":
 		arr.sort()
 	elif command == "p": #works
@@ -25,8 +24,6 @@ for i in range(lenght):
 	elif command == "r":
 		arr.reverse()
 
-
-print(arr)
 
 
 
