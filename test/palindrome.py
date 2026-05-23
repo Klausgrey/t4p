@@ -1,6 +1,5 @@
-empty_arr = ""
 def take_arr(string):
-	str_array = empty_arr.join(list(reversed(string))).lower().replace(" ", "")
+	str_array = "".join(list(reversed(string))).lower().replace(" ", "")
 	stry = string.lower().replace(" ", "")
 	if stry == str_array:
 		return True
@@ -11,4 +10,4 @@ def take_arr(string):
 
 
 print(take_arr("A man a plan a canal Panama"))
-# print(take_arr("A man a plan a canal Panama"))
+print(take_arr("Was it a car or a cat I saw"))
