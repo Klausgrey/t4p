@@ -10,10 +10,8 @@ const manipulation = (string, commands) => {
 		command = command.toLowerCase()
 		if (command === "u") {
 			arr = arr.toUpperCase();
-			back.push(arr);
 		} else if (command === "l") {
 			arr = arr.toLowerCase();
-			back.push(arr);
 		} else if (command === "r") {
 			arr = arr.split("").reverse().join("");
 		} else if (command === "z") {
