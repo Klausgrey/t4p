@@ -7,6 +7,7 @@ const manipulation = (string, commands) => {
 	let arr = string;
 
 	for (let command of commands) {
+		command = command.toLowerCase()
 		if (command === "u") {
 			arr = arr.toUpperCase();
 			back.push(arr);
@@ -15,20 +16,21 @@ const manipulation = (string, commands) => {
 			back.push(arr);
 		} else if (command === "r") {
 			arr = arr.split("").reverse().join("");
-			back.push(arr);
 		} else if (command === "z") {
 			back.pop();
 			arr = back[back.length - 1];
+			continue
 		} else if (command.includes("c ")) {
-			const [first, second, thrid] = command.split(" ");
-			arr = arr.replaceAll(second, thrid);
-			back.push(arr);
+			to_lower = arr.toLowerCase();
+			const [, second, thrid] = command.split(" ");
+			arr = to_lower.replaceAll(second, thrid);
 		} else {
-			console.log("Enter another command");
+			return console.log("Please enter a valid command");
 		}
+		back.push(arr);
 	}
 
 	return console.log(arr);
 };
 
-manipulaltion("Edosa is a boy", []);
+manipulation("Edosa is a boy", ["u", "l", "z", "c b z", "r", "Z"]);
