@@ -41,5 +41,6 @@ for check in checks:
 	else:
 		print("False")
 
+# second solution
 for method in ["isalnum", "isalpha", "isdigit", "islower", "isupper"]:
-	print(any(getattr(char, method)() for char in s))
+	print(any(getattr(char, method)() for char in  s))
