@@ -1,7 +1,6 @@
 import random
 data = []
 score = 0
-guessed = []
 
 files = open("countries.txt", 'r')
 if files == None:
@@ -13,7 +12,7 @@ for line in files.readlines():
 
 exit_game = False
 while not exit_game:
-	word = random.choice(data).lower().strip()
+	word = random.choice(data).lower()
 	guessed = []
 	print(word)
 	# display = ["_"] * len(word)
@@ -32,22 +31,22 @@ while not exit_game:
 		if guesses == "exit":
 			exit_game = True
 			break
-		if not guesses.isalpha():
-			print("stop trying to break my code and enter a letter only, t for thanks")
+		elif not guesses.isalpha():
+			print("Please enter letters not numbers")
 			number_of_guess += 1
 			print(f"You have {(3 - number_of_guess)} more trials")
 			continue
-		if len(guesses) != 1:
+		elif len(guesses) != 1:
 			print("can't you read, i said enter only one letter")
 			number_of_guess += 1
 			print(f"You have {(3 - number_of_guess)} more trials")
 			continue
-		if guesses in guessed:
+		elif guesses in guessed:
 			print(f"you have guessed this word before try again")
 			continue
+		else:
+			guessed.append(guesses)
 
-		guessed.append(guesses)
-		
 		if guesses not in word.replace(" ", "").replace("-", "").replace("{", "").replace("}", ""):
 			number_of_guess += 1
 			print(f"You have {(3 - number_of_guess)} more trials")
