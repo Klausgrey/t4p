@@ -8,6 +8,9 @@ except FileNotFoundError:
 	print("No file found")
 
 def hangman():
+	print("+" + "-"*40 + "+")
+	print("|      HANGMAN - COUNTRIES OF THE WORLD    |")
+	print("+" + "-"*40 + "+" + "\n")
 	display = []
 	guesses_words = []
 	random_countries = random.choice(data)
@@ -23,10 +26,12 @@ def hangman():
 		else:
 			display.append("_")
 
-	print(" ".join(display))
+	print(f"Word: {" ".join(display)}\n")
+	print(f"Guesses Letter: {" ".join(guesses_words)}\n")
 
 	while True:
-		user_guess = input("Enter your guessed word: ").lower()
+		user_guess = input("\nEnter your guessed word: ").lower()
+		print("+" + "-"*40 + "+" + "\n")
 		if user_guess == "exit":
 			print("Thanks for playing")
 			return
@@ -41,12 +46,17 @@ def hangman():
 
 		elif user_guess not in random_countries:
 			num_of_guesses -= 1
+			guesses_words.append(user_guess)
 			if num_of_guesses <= 0:
 				print(f"wrong guess, you have 0 remaining")
 				print("you've exhausted all your guesses")
 				return
 
-			print(f"wrong guess, you have {num_of_guesses} remaining")
+			print(f"wrong guess, you have {num_of_guesses} remaining\n")
+			print("+" + "-"*40 + "+" + "\n")
+			print(f"Word: {" ".join(display)}\n")
+			print(f"Guesses Letter: {" ".join(guesses_words)}")
+
 			continue
 
 		else:
@@ -55,11 +65,19 @@ def hangman():
 					display[index] = user_guess
 					guesses_words.append(user_guess)
 
-			print("".join(display))
+			print(f"Correct! '{user_guess.upper()}' is in the country name\n")
+			print("+" + "-"*40 + "+" + "\n")
+			print(f"Word: {" ".join(display)}\n")
+			# for x in guesses_words:
+			print(f"Guesses Letter: {" ".join(guesses_words)}\n")
+
 
 			if "_" not in display:
 				print("congarts you won")
 				return
+
+
+
 hangman()
 
 
