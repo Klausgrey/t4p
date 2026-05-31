@@ -68,20 +68,13 @@ def hangman():
 			print(f"Correct! '{user_guess.upper()}' is in the country name\n")
 			print("+" + "-"*40 + "+" + "\n")
 			print(f"Word: {" ".join(display)}\n")
-			# for x in guesses_words:
 			print(f"Guesses Letter: {" ".join(guesses_words)}\n")
 
 
 			if "_" not in display:
-				print("congarts you won")
+				print("You won")
 				return
 
 
 
 hangman()
-
-
-
-
-
-
