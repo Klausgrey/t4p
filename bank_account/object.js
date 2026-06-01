@@ -8,9 +8,9 @@ class BankAccount {
 		if (typeof amount !== "number" || isNaN(amount) || amount <= 0) {
 			return console.log("Invalid amount. Please enter a positive number.");
 		}
-		if (amount > this.balance) {
-			return console.log("Debit amount exceeds account balance.");
-		}
+		// if (amount > this.balance) {
+		// 	return console.log("Debit amount exceeds account balance.");
+		// }
 
 		this.balance = this.balance + amount
 	}
