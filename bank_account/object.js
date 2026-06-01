@@ -24,9 +24,14 @@ class BankAccount {
 	}
 }
 
-
 const user1 = new BankAccount(0)
+
+try {
+	user1.creditAmount(2000)
+	user1.debitAmount(100);
+	console.log(user1.getBalance())
+
+} catch (err) {
+	console.log(err);
+}
 // console.log(user1.balance);
-user1.creditAmount(2000)
-user1.debitAmount(500);
-console.log(user1.getBalance())
