@@ -1,5 +1,6 @@
 import random
 data = []
+running = True
 
 try:
 	with open("countries.txt", "r") as file:
@@ -8,14 +9,10 @@ except FileNotFoundError:
 	print("No file found")
 
 def hangman():
-	print("+" + "-"*40 + "+")
-	print("|      HANGMAN - COUNTRIES OF THE WORLD    |")
-	print("+" + "-"*40 + "+" + "\n")
 	display = []
 	guesses_words = []
 	random_countries = random.choice(data)
 	num_of_guesses = 3
-	print(random_countries)
 
 	if "{" in random_countries:
 		random_countries = random_countries.split("{")[0].strip().rstrip(",") # removes any countries that has {} in them
@@ -26,6 +23,10 @@ def hangman():
 		else:
 			display.append("_")
 
+	print("+" + "-"*40 + "+")
+	print("|      HANGMAN - COUNTRIES OF THE WORLD    |")
+	print("+" + "-"*40 + "+" + "\n")
+	print(random_countries)
 	print(f"Word: {" ".join(display)}\n")
 	print(f"Guesses Letter: {" ".join(guesses_words)}\n")
 
@@ -34,7 +35,7 @@ def hangman():
 		print("+" + "-"*40 + "+" + "\n")
 		if user_guess == "exit":
 			print("Thanks for playing")
-			return
+			return False
 
 		elif not user_guess.isalpha() or len(user_guess) != 1:
 			print("Invalid input! Enter a single letter (no numbers or special characters).")
@@ -76,5 +77,5 @@ def hangman():
 				return
 
 
-
-hangman()
+while running:
+	running = hangman()
