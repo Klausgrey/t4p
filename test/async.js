@@ -29,13 +29,13 @@
 
 // calculateSum(5, 6);
 
-// const display = (something) => {
-// 	console.log(something);
-// };
+const display = (something) => {
+	console.log(something);
+};
 
-// const calculateSum = (num1, num2, mycallback) => {
-// 	let sum = num1 + num2
-// 	mycallback(sum)
-// }
+const calculateSum = (num1, num2, mycallback) => {
+	let sum = num1 + num2
+	mycallback(sum)
+}
 
-// calculateSum(5, 5, display)
+calculateSum(5, 5, display)
