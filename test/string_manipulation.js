@@ -17,8 +17,8 @@ const manipulation = (string, commands) => {
 		} else if (command === "z") {
 			back.pop();
 			arr = back[back.length - 1];
-			continue
-		} else if (command.includes("c ")) {
+			continue;
+		} else if (command.startsWith("c")) {
 			to_lower = arr.toLowerCase();
 			const [, second, thrid] = command.split(" ");
 			arr = to_lower.replaceAll(second, thrid);
@@ -31,4 +31,11 @@ const manipulation = (string, commands) => {
 	return console.log(arr);
 };
 
-manipulation("Edosa is a boy", ["u", "l", "z", "c b z", "r", "Z"]);
+manipulation("Edosa is a boy, he loves to eat bread and eggs for breakfast", [
+	"u",
+	"l",
+	"z",
+	"c b z",
+	"r",
+	"Z",
+]);
