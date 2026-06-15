@@ -10,7 +10,7 @@ class BankAccount {
 			(acc) => acc.account_number === accountNumber,
 		);
 		if (!account || !account.is_active) {
-			console.log("inactive user");
+			console.log("account not found or inactive user");
 			return;
 		}
 
@@ -20,7 +20,7 @@ class BankAccount {
 			return;
 		}
 
-		account.balance = account.balance - amount;
+		account.balance = account.balance + amount;
 		fs.writeFileSync(
 			"sample.json",
 			JSON.stringify(this.accounts, null, 2),
@@ -33,7 +33,7 @@ class BankAccount {
 			(acc) => acc.account_number === accountNumber,
 		);
 		if (!account || !account.is_active) {
-			console.log("inactive user");
+			console.log("account not found or inactive user");
 			return;
 		}
 
@@ -65,7 +65,7 @@ class BankAccount {
 			(acc) => acc.account_number === sender,
 		);
 		if (!senderAccount || !senderAccount.is_active) {
-			console.log("inactive user");
+			console.log("account not found or inactive user");
 			return;
 		}
 
@@ -73,7 +73,7 @@ class BankAccount {
 			(acc) => acc.account_number === receiver,
 		);
 		if (!receiverAccount || !receiverAccount.is_active) {
-			console.log("inactive user");
+			console.log("account not found or inactive user");
 			return;
 		}
 
@@ -88,13 +88,21 @@ class BankAccount {
 			return;
 		}
 
-		receiverAccount.balance = receiverAccount.balance - amount;
-		senderAccount.balance = senderAccount.balance + amount;
+		receiverAccount.balance = receiverAccount.balance + amount;
+		senderAccount.balance = senderAccount.balance - amount;
 		fs.writeFileSync("sample.json", JSON.stringify(this.accounts, null, 2));
 	}
 
-	getMainBalance() {
-		return getBalance();
+	getBalance(accountNumber) {
+		const account = this.accounts.find(
+			(acc) => acc.account_number === accountNumber,
+		);
+		if (!account || !account.is_active) {
+			console.log("account not found or inactive user");
+			return;
+		}
+
+		return account;
 	}
 }
 
