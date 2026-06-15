@@ -1,3 +1,7 @@
+const fs = require("fs")
+
+
+
 class BankAccount {
 	constructor(balance) {
 		if (typeof balance !== "number" || isNaN(balance)) {
