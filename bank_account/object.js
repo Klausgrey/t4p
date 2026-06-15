@@ -90,7 +90,11 @@ class BankAccount {
 
 		receiverAccount.balance = receiverAccount.balance + amount;
 		senderAccount.balance = senderAccount.balance - amount;
-		fs.writeFileSync("sample.json", JSON.stringify(this.accounts, null, 2));
+		fs.writeFileSync(
+			"sample.json",
+			JSON.stringify(this.accounts, null, 2),
+			"utf8",
+		);
 	}
 
 	getBalance(accountNumber) {
