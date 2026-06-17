@@ -1,4 +1,4 @@
-const BankAccount = require("./object");
+const BankAccount = require("./bankAccount");
 
 const user1 = new BankAccount();
 user1.creditAmount("1", 2000);

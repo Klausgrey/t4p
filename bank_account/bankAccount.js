@@ -1,4 +1,5 @@
 const fs = require("fs");
+// import fsModule from "fs"
 
 class BankAccount {
 	constructor() {
