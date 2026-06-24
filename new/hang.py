@@ -19,6 +19,7 @@ def hangman(countries_list):
 		print("+" + "-"*40 + "+")
 		print("|      HANGMAN - COUNTRIES OF THE WORLD    |")
 		print("+" + "-"*40 + "+" + "\n")
+		
 		print(random_country)
 		print(f"Word: {" ".join(display)}\n")
 		print(f"Guesses Letter: {" ".join(guesses_words)}\n")
