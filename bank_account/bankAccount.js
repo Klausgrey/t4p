@@ -1,114 +1,31 @@
-const fs = require("fs");
-// import fsModule from "fs"
-
 class BankAccount {
-	constructor() {
-		this.accounts = JSON.parse(fs.readFileSync("sample.json", "utf8"));
+	constructor(balance) {
+		if (balance < 0) throw new Error("balance cannot be negative");
+		this.balance = balance;
 	}
 
-	creditAmount(accountNumber, amount) {
-		const account = this.accounts.find(
-			(acc) => acc.account_number === accountNumber,
-		);
-		if (!account || !account.is_active) {
-			console.log("account not found or inactive user");
-			return;
-		}
-
-		amount = Number(amount);
-		if (isNaN(amount) || amount <= 0) {
-			console.log("Invalid amount.");
-			return;
-		}
-
-		account.balance = account.balance + amount;
-		fs.writeFileSync(
-			"sample.json",
-			JSON.stringify(this.accounts, null, 2),
-			"utf8",
-		);
+	creditAmount(amount) {
+		this.balance = this.balance + amount;
 	}
 
-	debitAmount(accountNumber, amount) {
-		const account = this.accounts.find(
-			(acc) => acc.account_number === accountNumber,
-		);
-		if (!account || !account.is_active) {
-			console.log("account not found or inactive user");
-			return;
+	debitAmount(amount) {
+		if (typeof amount !== "number" || isNaN(amount) || amount <= 0) {
+			return console.log("Invalid amount. Please enter a positive number.");
+		}
+		if (amount > this.balance) {
+			return console.log("Debit amount exceeds account balance.");
 		}
 
-		amount = Number(amount);
-		if (isNaN(amount) || amount <= 0) {
-			console.log("Invalid amount. Please enter a positive number.");
-			return;
-		}
-
-		if (amount > account.balance) {
-			console.log("Debit amount exceeds account balance.");
-			return;
-		}
-
-		account.balance = account.balance - amount;
-		fs.writeFileSync(
-			"sample.json",
-			JSON.stringify(this.accounts, null, 2),
-			"utf8",
-		);
+		this.balance = this.balance - amount;
 	}
 
-	transfer(sender, receiver, amount) {
-		if (sender === receiver) {
-			console.log("cannot send to your self");
-			return;
-		}
-		const senderAccount = this.accounts.find(
-			(acc) => acc.account_number === sender,
-		);
-		if (!senderAccount || !senderAccount.is_active) {
-			console.log("account not found or inactive user");
-			return;
-		}
-
-		const receiverAccount = this.accounts.find(
-			(acc) => acc.account_number === receiver,
-		);
-		if (!receiverAccount || !receiverAccount.is_active) {
-			console.log("account not found or inactive user");
-			return;
-		}
-
-		amount = Number(amount);
-		if (isNaN(amount) || amount <= 0) {
-			console.log("Invalid amount. Please enter a positive number.");
-			return;
-		}
-
-		if (amount > senderAccount.balance) {
-			console.log("cannot transfer what you do not have");
-			return;
-		}
-
-		receiverAccount.balance = receiverAccount.balance + amount;
-		senderAccount.balance = senderAccount.balance - amount;
-		fs.writeFileSync(
-			"sample.json",
-			JSON.stringify(this.accounts, null, 2),
-			"utf8",
-		);
-	}
-
-	getBalance(accountNumber) {
-		const account = this.accounts.find(
-			(acc) => acc.account_number === accountNumber,
-		);
-		if (!account || !account.is_active) {
-			console.log("account not found or inactive user");
-			return;
-		}
-
-		return account;
+	getBalance() {
+		return this.balance;
 	}
 }
 
-module.exports = BankAccount;
+const user1 = new BankAccount(0);
+// console.log(user1.balance);
+user1.creditAmount(2000);
+user1.debitAmount(500);
+console.log(user1.getBalance());
