@@ -1,6 +1,16 @@
 import random
+import templates
+import profiles
+import learderboard
+
 def hangman(countries_list):
-	score = 0
+	learderboard.show_leaderboard()
+	players_details = profiles.get_player_name()
+	if not players_details:
+		learderboard.show_leaderboard()
+		return
+	
+	score = players_details["score"]
 
 	while True:
 		random_country = random.choice(countries_list)
@@ -16,22 +26,21 @@ def hangman(countries_list):
 			else:
 				display.append("_")
 
-		print("+" + "-"*40 + "+")
-		print("|      HANGMAN - COUNTRIES OF THE WORLD    |")
-		print("+" + "-"*40 + "+" + "\n")
-		
+		templates.header()
+
 		print(random_country)
-		print(f"Word: {" ".join(display)}\n")
-		print(f"Guesses Letter: {" ".join(guesses_words)}\n")
+		templates.word_display(display)
+		templates.guessesWords(guesses_words)
 
 		while "_" in display and num_of_guesses > 0:
 			user_guess = input("\nEnter your guessed word: ").lower()
-			print("+" + "-"*40 + "+" + "\n")
-
+			templates.divider()
 
 			if user_guess == "exit":
 				print("Thanks for playing")
 				print(f"your score is {score}")
+				profiles.save_score(players_details["name"], score)
+				learderboard.show_leaderboard()
 				return
 
 			elif not user_guess.isalpha() or len(user_guess) != 1:
@@ -49,12 +58,13 @@ def hangman(countries_list):
 					print(f"wrong guess, you have 0 remaining")
 					print("you've exhausted all your guesses")
 					print(f"your score is {score}")
+					profiles.save_score(players_details["name"], score)
 					break
 
 				print(f"wrong guess, you have {num_of_guesses} remaining\n")
-				print("+" + "-"*40 + "+" + "\n")
-				print(f"Word: {" ".join(display)}\n")
-				print(f"Guesses Letter: {" ".join(guesses_words)}")
+				templates.divider()
+				templates.word_display(display)
+				templates.guessesWords(guesses_words)
 				continue
 
 			else:
@@ -63,15 +73,14 @@ def hangman(countries_list):
 						display[index] = user_guess
 						guesses_words.append(user_guess)
 
-				print(f"Correct! '{user_guess.upper()}' is in the country name\n")
-				print("+" + "-"*40 + "+" + "\n")
-				print(f"Word: {" ".join(display)}\n")
-				print(f"Guesses Letter: {" ".join(guesses_words)}\n")
+				templates.correct_display(user_guess)
+				templates.divider()
+				templates.word_display(display)
+				templates.guessesWords(guesses_words)
 
 			if "_" not in display:
 				score += 1
 				print("You won")
 				print(f"your score is {score}")
+				profiles.save_score(players_details["name"], score)
 				break
-
-

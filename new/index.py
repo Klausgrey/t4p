@@ -1,4 +1,4 @@
-from hang import hangman
+from hangman import hangman
 data = []
 running = True
 
