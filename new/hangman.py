@@ -6,10 +6,11 @@ import learderboard
 def hangman(countries_list):
 	learderboard.show_leaderboard()
 	players_details = profiles.get_player_name()
-	if not players_details:
+	if players_details == False:
+		print("Exitting...")
 		learderboard.show_leaderboard()
 		return
-	
+
 	score = players_details["score"]
 
 	while True:
