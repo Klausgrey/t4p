@@ -93,16 +93,24 @@ app.post("/users", (req, res) => {
 app.put("/users/:id", (req, res) => {
 	const userId = req.params.id;
 	const { name, email } = req.body;
+	if (!userId || !name || !email)
+		return res
+			.status(400)
+			.json({ message: "id, name, email are all required..." });
+
+	if (typeof name !== "string" || typeof email !== "string")
+		return res
+			.status(400)
+			.json({ message: "name and email must be a string " });
+
 	const user = users.find((user) => user.id == userId);
 	if (!user) return res.status(400).json({ message: "user does not exists" });
+	user.name = name;
+	user.email = email;
 
-	users.forEach((u) => {
-		u.name = name;
-		u.email = email;
-	});
-	const result = { id, name, email };
+	const result = { userId, name, email };
 	res.status(200).json({
-		message: `user with the ${id} has been updated successfully`,
+		message: `user with the ${userId} has been updated successfully`,
 		result,
 	});
 });
