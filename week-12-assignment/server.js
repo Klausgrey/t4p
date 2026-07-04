@@ -64,12 +64,18 @@ app.post("/users", (req, res) => {
 	const body = req.body;
 
 	const { id, name, email } = req.body;
+	if (!id || !name || !email)
+		return res
+			.status(400)
+			.json({ message: "id, name, email are all required..." });
+
+	if (typeof name !== "string" || typeof email !== "string")
+		return res
+			.status(400)
+			.json({ message: "name and email must be a string " });
 
 	const user = users.find((user) => user.id == id);
 
-	if (id == undefined) {
-		return res.status(400).json({ message: "id field is mandatory" });
-	}
 	if (user) {
 		return res.status(400).json({ message: `User with id ${id} available` });
 	}
@@ -84,9 +90,10 @@ app.post("/users", (req, res) => {
 	});
 });
 
-app.put("/users", (req, res) => {
-	const { id, name, email } = req.body;
-	const user = users.find((user) => user.id == id);
+app.put("/users/:id", (req, res) => {
+	const userId = req.params.id;
+	const { name, email } = req.body;
+	const user = users.find((user) => user.id == userId);
 	if (!user) return res.status(400).json({ message: "user does not exists" });
 
 	users.forEach((u) => {
