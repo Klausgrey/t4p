@@ -100,6 +100,20 @@ app.put("/users", (req, res) => {
 	});
 });
 
+app.delete("/users/:id", (req, res) => {
+	let data;
+	const userId = req.params.id;
+	const user = users.findIndex((user) => user.id == userId);
+
+	if (user !== -1) {
+		data = users.splice(user, 1);
+		res.status(200).json({
+			message: `user with the ${userId} has been updated successfully`,
+			data: data,
+		});
+	} else res.status(404).json({ message: `user with id ${userId}not found` });
+});
+
 // invalid routes
 app.use((req, res) => {
 	res.status(404).json({
