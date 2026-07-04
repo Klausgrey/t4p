@@ -118,12 +118,17 @@ app.put("/users/:id", (req, res) => {
 app.delete("/users/:id", (req, res) => {
 	let data;
 	const userId = req.params.id;
+	if (!userId )
+		return res
+			.status(400)
+			.json({ message: "id, name, email are all required..." });
+
 	const userIndex = users.findIndex((userIndex) => userIndex.id == userId);
 
 	if (userIndex !== -1) {
 		data = users.splice(userIndex, 1);
 		res.status(200).json({
-			message: `user with the ${userId} has been updated successfully`,
+			message: `user with the ${userId} has been deleted successfully`,
 			data: data,
 		});
 	} else res.status(404).json({ message: `user with id ${userId}not found` });
