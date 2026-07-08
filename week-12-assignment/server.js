@@ -131,7 +131,7 @@ app.delete("/users/:id", (req, res) => {
 			message: `user with the ${userId} has been deleted successfully`,
 			data: data,
 		});
-	} else res.status(404).json({ message: `user with id ${userId}not found` });
+	} else res.status(404).json({ message: `user with id ${userId} not found` });
 });
 
 // invalid routes
