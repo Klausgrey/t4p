@@ -41,3 +41,11 @@ def failed_display(country_name, score):
 	print(f"| Country was: {country_name.upper():<25}|")
 	print(f"| Your score:  {score:<25}|")
 	print("+" + "-"*40 + "+")
+
+def won_display(country_name, score):
+	print("+" + "-"*40 + "+")
+	print("|" + " "*15 + "YOU WON!" + " "*17 + "|")
+	print("+" + "-"*40 + "+")
+	print(f"| Country:     {country_name.upper():<25}|")
+	print(f"| Your score:  {score:<25}|")
+	print("+" + "-"*40 + "+")

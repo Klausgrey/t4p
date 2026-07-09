@@ -88,7 +88,6 @@ def hangman(countries_list):
 
 			if "_" not in display:
 				score += 1
-				print("You won")
-				print(f"your score is {score}")
+				templates.won_display(random_country, score)
 				profiles.save_score(players_details["name"], score)
 				break
