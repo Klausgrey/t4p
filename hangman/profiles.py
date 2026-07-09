@@ -1,8 +1,10 @@
 import os
 import json
+import templates
 
 def get_player_name():
 	while True:
+		templates.name_prompt()
 		player_name = input("Enter your username: ").strip().lower()
 		if player_name == "exit":
 			return False

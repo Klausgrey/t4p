@@ -2,16 +2,24 @@ import random
 import templates
 import profiles
 import learderboard
+import difficulty
 
 def hangman(countries_list):
+	templates.banner()
 	learderboard.show_leaderboard()
+
 	players_details = profiles.get_player_name()
 	if players_details == False:
 		print("Exitting...")
-		learderboard.show_leaderboard()
 		return
 
 	score = players_details["score"]
+
+	level_name, level_settings = difficulty.choose_one()
+	if level_name == None:
+		print('thanks for playing..')
+		return
+
 
 	while True:
 		random_country = random.choice(countries_list)
@@ -20,7 +28,7 @@ def hangman(countries_list):
 
 		display = []
 		guesses_words = []
-		num_of_guesses = 3
+		num_of_guesses = level_settings['max_wrong_guesses']
 		for char in random_country:
 			if char in [" ", "-"]:
 				display.append(char)
@@ -34,7 +42,8 @@ def hangman(countries_list):
 		templates.guessesWords(guesses_words)
 
 		while "_" in display and num_of_guesses > 0:
-			user_guess = input("\nEnter your guessed word: ").lower()
+			templates.guess_prompt(num_of_guesses)
+			user_guess = input("> ").lower()
 			templates.divider()
 
 			if user_guess == "exit":
@@ -56,9 +65,7 @@ def hangman(countries_list):
 				num_of_guesses -= 1
 				guesses_words.append(user_guess)
 				if num_of_guesses <= 0:
-					print(f"wrong guess, you have 0 remaining")
-					print("you've exhausted all your guesses")
-					print(f"your score is {score}")
+					templates.failed_display(random_country, score)
 					profiles.save_score(players_details["name"], score)
 					break
 
