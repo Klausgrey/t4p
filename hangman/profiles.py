@@ -37,5 +37,6 @@ def save_score(name, score):
 			entries[i]["score"] = score
 
 	with open("leaderboard.json", "w") as f:
-			json.dump(entries, f, indent=4)
-			return entries[i]
+		json.dump(entries, f, indent=4)
+		f.close()
+		return entries[i]
