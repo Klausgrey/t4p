@@ -23,6 +23,7 @@ def hangman(countries_list):
 
 	while True:
 		random_country = random.choice(countries_list)
+		random_country = random_country["name"].lower()
 		if "{" in random_country:
 			random_country = random_country.split("{")[0].strip().rstrip(",") # removes any countries that has {} in them
 
