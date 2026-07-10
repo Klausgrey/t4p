@@ -22,8 +22,8 @@ def hangman(countries_list):
 
 
 	while True:
-		random_country = random.choice(countries_list)
-		random_country = random_country["name"].lower()
+		random_country_data = random.choice(countries_list)
+		random_country = random_country_data["name"].lower()
 		if "{" in random_country:
 			random_country = random_country.split("{")[0].strip().rstrip(",") # removes any countries that has {} in them
 
@@ -54,6 +54,9 @@ def hangman(countries_list):
 				learderboard.show_leaderboard()
 				return
 
+			elif user_guess == "?":
+				print(random_country_data["fact"])
+				continue
 			elif not user_guess.isalpha() or len(user_guess) != 1:
 				print("Invalid input! Enter a single letter (no numbers or special characters).")
 				continue
