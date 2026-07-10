@@ -29,6 +29,7 @@ def hangman(countries_list):
 
 		display = []
 		guesses_words = []
+		hints_used = False
 		num_of_guesses = level_settings['max_wrong_guesses']
 		for char in random_country:
 			if char in [" ", "-"]:
@@ -55,8 +56,15 @@ def hangman(countries_list):
 				return
 
 			elif user_guess == "?":
-				print(random_country_data["fact"])
+				if not level_settings['hints']:
+					print('hint not available at this level...')
+				elif hints_used:
+					print("Hint already used for this round.\n")
+				else:
+					print(f"{random_country_data['fact']}\n")
+					hints_used = True
 				continue
+
 			elif not user_guess.isalpha() or len(user_guess) != 1:
 				print("Invalid input! Enter a single letter (no numbers or special characters).")
 				continue
