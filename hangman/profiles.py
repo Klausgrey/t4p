@@ -31,12 +31,14 @@ def get_player_name():
 
 
 def save_score(name, score):
+
 	with open("leaderboard.json", "r") as f:
 		entries = json.load(f)
 
 	for i in range(len(entries)):
 		if entries[i]["name"] == name:
 			entries[i]["score"] = score
+
 
 	with open("leaderboard.json", "w") as f:
 		json.dump(entries, f, indent=4)

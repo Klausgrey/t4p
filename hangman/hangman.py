@@ -40,11 +40,10 @@ def hangman(countries_list):
 		templates.header()
 
 		print(random_country)
-		templates.word_display(display)
-		templates.guessesWords(guesses_words)
+		templates.game_state(display, guesses_words, num_of_guesses, score)
 
 		while "_" in display and num_of_guesses > 0:
-			templates.guess_prompt(num_of_guesses)
+			templates.guess_prompt()
 			user_guess = input("> ").lower()
 			templates.divider()
 
@@ -83,8 +82,7 @@ def hangman(countries_list):
 
 				print(f"wrong guess, you have {num_of_guesses} remaining\n")
 				templates.divider()
-				templates.word_display(display)
-				templates.guessesWords(guesses_words)
+				templates.game_state(display, guesses_words, num_of_guesses, score)
 				continue
 
 			else:
@@ -95,8 +93,7 @@ def hangman(countries_list):
 
 				templates.correct_display(user_guess)
 				templates.divider()
-				templates.word_display(display)
-				templates.guessesWords(guesses_words)
+				templates.game_state(display, guesses_words, num_of_guesses, score)
 
 			if "_" not in display:
 				score += 1

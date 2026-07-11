@@ -6,11 +6,6 @@ def header():
 def divider():
 	print("+" + "-"*40 + "+" + "\n")
 
-def word_display(display):
-	print(f"Word: {' '.join(display)}\n")
-
-def guessesWords(word):
-	print(f"Guesses : {' '.join(word)}\n")
 
 def correct_display(user_guess):
 	print(f"Correct! '{user_guess.upper()}' is in the country name\n")
@@ -31,8 +26,8 @@ def name_prompt():
 	print("+" + "-"*40 + "+")
 
 
-def guess_prompt(guesses_left):
-	print(f"┌─ Guesses left: {guesses_left} ")
+def guess_prompt():
+	print(f"┌─  Enter a letter (or '?' for a hint): ")
 
 def failed_display(country_name, score):
 	print("+" + "-"*40 + "+")
@@ -49,3 +44,9 @@ def won_display(country_name, score):
 	print(f"| Country:     {country_name.upper():<25}|")
 	print(f"| Your score:  {score:<25}|")
 	print("+" + "-"*40 + "+")
+
+def game_state(display, guesses_words, guesses_left, score):
+	print(f"Word:  {' '.join(display)}\n")
+	print(f"Guessed Letters:  {'  '.join(sorted(guesses_words))}\n")
+	print(f"Incorrect Guesses Remaining: {guesses_left}")
+	print(f"Score: {score:,}\n")
