@@ -3,7 +3,6 @@
 */
 
 const router = require("express").Router();
-const { dir } = require("node:console");
 const { v4 } = require("uuid");
 
 const users = [
