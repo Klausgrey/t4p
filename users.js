@@ -6,14 +6,6 @@ const router = require("express").Router();
 const { dir } = require("node:console");
 const { v4 } = require("uuid");
 
-// class User {
-// 	constructor(id, name, email) {
-// 		this.id = id;
-// 		this.name = name;
-// 		this.email = email;
-// 	}
-// }
-// not useful
 
 const users = [
 	{
@@ -57,11 +49,13 @@ const users = [
 router.get("", (req, res) => {
 	let filteredUsers = users;
 	const { email, sortBy } = req.query;
-	if (sortBy === "age") {
-		let direction = req.query.order === "desc" ? -1 : 1;
-		filteredUsers.sort((a, b) => (a.age - b.age) * direction);
-	} else
-		return res.status(400).json({ message: "you can only sort by age..." });
+	if (sortBy) {
+		if (sortBy === "age") {
+			let direction = req.query.order === "desc" ? -1 : 1;
+			filteredUsers.sort((a, b) => (a.age - b.age) * direction);
+		} else
+			return res.status(400).json({ message: "you can only sort by age..." });
+	}
 	if (email) {
 		filteredUsers = users.filter(
 			(user) => user.email.toLowerCase() == email?.toLowerCase(),
@@ -113,15 +107,19 @@ router.post("", (req, res) => {
 	});
 });
 
-router.put("/users/:id", (req, res) => {
+router.put("/:id", (req, res) => {
 	const userId = req.params.id;
-	const { name, email } = req.body;
-	if (!userId || !name || !email)
+	const { name, email, age } = req.body;
+	if (!userId || !name || !email || !age)
 		return res
 			.status(400)
-			.json({ message: "id, name, email are all required..." });
+			.json({ message: "name, email and age are all required..." });
 
-	if (typeof name !== "string" || typeof email !== "string")
+	if (
+		typeof name !== "string" ||
+		typeof email !== "string" ||
+		typeof age !== "number"
+	)
 		return res
 			.status(400)
 			.json({ message: "name and email must be a string " });
@@ -130,21 +128,19 @@ router.put("/users/:id", (req, res) => {
 	if (!user) return res.status(400).json({ message: "user does not exists" });
 	user.name = name;
 	user.email = email;
+	user.age = age;
 
-	const result = { userId, name, email };
+	const result = { userId, name, email, age };
 	res.status(200).json({
-		message: `user with the ${userId} has been updated successfully`,
+		message: `user with the id ${userId} has been updated successfully`,
 		result,
 	});
 });
 
-router.delete("/users/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
 	let data;
 	const userId = req.params.id;
-	if (!userId)
-		return res
-			.status(400)
-			.json({ message: "id, name, email are all required..." });
+	if (!userId) return res.status(400).json({ message: "provide an id..." });
 
 	const userIndex = users.findIndex((userIndex) => userIndex.id == userId);
 
