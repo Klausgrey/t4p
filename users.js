@@ -6,7 +6,6 @@ const router = require("express").Router();
 const { dir } = require("node:console");
 const { v4 } = require("uuid");
 
-
 const users = [
 	{
 		id: "16f5b131-8fe8-4638-8d96-1aa53501625d",
@@ -85,9 +84,15 @@ router.get("/:variable", (req, res) => {
 });
 
 router.post("", (req, res) => {
-	const body = req.body;
-
-	const { name, email } = req.body;
+	const { name, email, age } = req.body;
+	if (
+		typeof name !== "string" ||
+		typeof email !== "string" ||
+		typeof age !== "number"
+	)
+		return res
+			.status(400)
+			.json({ message: "name and email must be a string " });
 
 	const user = users.find((user) => user.email == email);
 
