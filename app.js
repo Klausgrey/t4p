@@ -4,7 +4,7 @@ import noteRouter from "./src/routers/note.router.js";
 const app = express();
 
 app.use(express.json());
-app.use("/auth", authRouter);
+app.use("/users", authRouter);
 app.use("/notes", noteRouter);
 
 export default app;

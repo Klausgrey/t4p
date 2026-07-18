@@ -18,3 +18,17 @@ export const createNote = (userId, title, body, tag) => {
 export const getUserNote = (userId) => {
 	return notes.filter((notes) => notes.userId === userId);
 };
+
+export const getallnotes = () => {
+	return notes
+}
+
+
+export const patchUserNote = (userId, noteId, updates) => {
+	const note = notes.find((n) => n.id === noteId)
+	if (!note) return
+	if (userId !== note.userId) return
+
+	Object.assign(note, updates)
+	return note
+}

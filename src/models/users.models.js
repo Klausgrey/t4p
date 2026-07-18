@@ -17,7 +17,18 @@ export const createUser = (username, password) => {
 };
 
 export const getUserPassword = (username) => {
-	const data = users.find((user) => username.toLowerCase() === user.username.toLowerCase());
+	const data = users.find(
+		(user) => username.toLowerCase() === user.username.toLowerCase(),
+	);
 	if (!data) return;
-	return data ;
+	return data;
 };
+
+export const getCurrentUser = (userId) => {
+	return (data = users.find((user) => userId === user.id));
+};
+
+export const getalluser = () => {
+	return users
+}
+

@@ -24,3 +24,7 @@ export const getNote = async (req, res) => {
 		res.status(500).json({ error: "Failed to fetch notes" });
 	}
 };
+
+export const patchNote = async (req, res) => {
+	
+}

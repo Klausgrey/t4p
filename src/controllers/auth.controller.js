@@ -1,4 +1,8 @@
-import { createUser, getUserPassword } from "../models/users.models.js";
+import {
+	createUser,
+	getUserPassword,
+	getCurrentUser,
+} from "../models/users.models.js";
 import bcrypt from "bcrypt";
 import Jwt from "jsonwebtoken";
 const jwt = Jwt;
@@ -38,6 +42,18 @@ export const login = async (req, res) => {
 			expiresIn: process.env.JWT_EXPIRES_IN,
 		});
 		res.status(200).json({ message: "user logged in...", token });
+	} catch (err) {
+		res.status(501).json(err);
+	}
+};
+
+export const getUser = (req, res) => {
+	const userId = req.user.id;
+	try {
+		const user = getCurrentUser(userId);
+		res
+			.status(200)
+			.json({ status: "success", id: user.id, username: user.username });
 	} catch (err) {
 		res.status(501).json(err);
 	}
