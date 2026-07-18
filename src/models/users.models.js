@@ -1,9 +1,11 @@
 import { v4 } from "uuid";
 const users = [];
 
-export const createUser = (id, username, password) => {
-	const existing = users.find((user) => username == user.username);
-	if (existing) return `user already exists...`;
+export const createUser = (username, password) => {
+	const existing = users.find(
+		(user) => username.toLowerCase() === user.username.toLowerCase(),
+	);
+	if (existing) return;
 	const data = {
 		id: v4(),
 		username,
@@ -12,4 +14,10 @@ export const createUser = (id, username, password) => {
 	};
 	users.push(data);
 	return data;
+};
+
+export const getUserPassword = (username) => {
+	const data = users.find((user) => username.toLowerCase() === user.username.toLowerCase());
+	if (!data) return;
+	return data ;
 };
