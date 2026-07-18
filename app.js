@@ -5,6 +5,6 @@ const app = express();
 
 app.use(express.json());
 app.use("/auth", authRouter);
-app.use("/user", noteRouter);
+app.use("/notes", noteRouter);
 
 export default app;
