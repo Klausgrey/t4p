@@ -17,7 +17,13 @@ export const create = async (req, res) => {
 			data,
 		});
 	} catch (err) {
-		res.status(500).json({ error: "Failed to create note" });
+		if (err.message === "INVALID_TAG") {
+			return res.status(400).json({
+				error:
+					"Invalid tag value. Tag must be one of: personal, work, or other.",
+			});
+		}
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -49,14 +55,22 @@ export const patchNote = async (req, res) => {
 
 	try {
 		const updatedNote = patchUserNote(userId, noteId, updates);
-		if (!updatedNote)
-			return res.status(401).json({ error: "Invalid note id..." });
+		if (updatedNote === "NOT FOUND")
+			return res.status(404).json({ error: "Note not found..." });
+		if (updatedNote === "FORBIDDEN")
+			return res.status(403).json({ error: "You don't own this note" });
 		res.status(200).json({
 			message: "Note updated successfully.",
 			data: updatedNote,
 		});
 	} catch (err) {
-		return res.status(500).json({ error: "Internal server error." });
+		if (err.message === "INVALID_TAG") {
+			return res.status(400).json({
+				error:
+					"Invalid tag value. Tag must be one of: personal, work, or other.",
+			});
+		}
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };
 
@@ -66,12 +80,10 @@ export const deleteNote = async (req, res) => {
 
 	try {
 		const status = deleteUserNote(userId, noteId);
-		if (status === "NOT FOUND") {
+		if (status === "NOT FOUND")
 			return res.status(404).json({ error: "Note not found" });
-		}
-		if (status === "FORBIDDEN") {
+		if (status === "FORBIDDEN")
 			return res.status(403).json({ error: "You don't own this note" });
-		}
 		res.status(200).json({
 			message: "Note deleted...",
 		});
