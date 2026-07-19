@@ -4,17 +4,17 @@ import {
 	userNote,
 	getNotes,
 	patchNote,
-	deleteNote
+	deleteNote,
 } from "../controllers/note.controller.js";
 import { verifytoken } from "../middleware/authMiddleware.js";
-import { get } from "node:http";
-import { validate } from "uuid";
+import { validateBody } from "../middleware/validateBody.js";
 
 const router = express.Router();
-router.post("/", verifytoken, create);
+
+router.post("/", verifytoken, validateBody(["title", "body", "tag"]), create);
 router.get("/", verifytoken, userNote);
 router.get("/all", verifytoken, getNotes);
 router.patch("/:id", verifytoken, patchNote);
-router.delete("/:id", validate, deleteNote)
+router.delete("/:id", verifytoken, deleteNote);
 
 export default router;
