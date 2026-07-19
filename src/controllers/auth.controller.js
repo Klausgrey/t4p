@@ -2,6 +2,7 @@ import {
 	createUser,
 	getUserPassword,
 	getCurrentUser,
+	getAllUsers,
 } from "../models/users.models.js";
 import bcrypt from "bcrypt";
 import Jwt from "jsonwebtoken";
@@ -29,10 +30,10 @@ export const login = async (req, res) => {
 	try {
 		const user = getUserPassword(username);
 		if (!user)
-			res.status(401).json({ error: "Invalid username or password..." });
+			return res.status(401).json({ error: "Invalid username or password..." });
 		const match = await bcrypt.compare(password, user.password);
 		if (!match)
-			res.status(401).json({ error: "Invalid username or password..." });
+			return res.status(401).json({ error: "Invalid username or password..." });
 
 		const payload = {
 			id: user.id,
@@ -47,13 +48,23 @@ export const login = async (req, res) => {
 	}
 };
 
-export const getUser = (req, res) => {
+export const getUsers = (req, res) => {
 	const userId = req.user.id;
 	try {
 		const user = getCurrentUser(userId);
 		res
-			.status(200)
+			.status()
 			.json({ status: "success", id: user.id, username: user.username });
+	} catch (err) {
+		res.status(501).json(err);
+	}
+};
+
+export const getAll = (req, res) => {
+	const userId = req.user.id;
+	try {
+		const user = getAllUsers();
+		res.status(200).json({ status: "success", user });
 	} catch (err) {
 		res.status(501).json(err);
 	}

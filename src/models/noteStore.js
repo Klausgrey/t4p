@@ -19,7 +19,7 @@ export const getUserNote = (userId) => {
 	return notes.filter((notes) => notes.userId === userId);
 };
 
-export const getallnotes = () => {
+export const getAllNotes = () => {
 	return notes
 }
 

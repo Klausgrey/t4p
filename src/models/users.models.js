@@ -28,7 +28,7 @@ export const getCurrentUser = (userId) => {
 	return (data = users.find((user) => userId === user.id));
 };
 
-export const getalluser = () => {
+export const getAllUsers = () => {
 	return users
 }
 
