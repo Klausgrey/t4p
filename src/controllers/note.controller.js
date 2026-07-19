@@ -3,6 +3,7 @@ import {
 	getUserNote,
 	getAllNotes,
 	patchUserNote,
+	deleteUserNote,
 } from "../models/noteStore.js";
 
 export const create = async (req, res) => {
@@ -49,10 +50,30 @@ export const patchNote = async (req, res) => {
 	try {
 		const updatedNote = patchUserNote(userId, noteId, updates);
 		if (!updatedNote)
-			return res.status(401).json({ error: "Invalid username or password..." });
+			return res.status(401).json({ error: "Invalid note id..." });
 		res.status(200).json({
 			message: "Note updated successfully.",
 			data: updatedNote,
+		});
+	} catch (err) {
+		return res.status(500).json({ error: "Internal server error." });
+	}
+};
+
+export const deleteNote = async (req, res) => {
+	const noteId = req.params.id;
+	const userId = req.user.id;
+
+	try {
+		const status = deleteUserNote(userId, noteId);
+		if (status === "NOT FOUND") {
+			return res.status(404).json({ error: "Note not found" });
+		}
+		if (status === "FORBIDDEN") {
+			return res.status(403).json({ error: "You don't own this note" });
+		}
+		res.status(200).json({
+			message: "Note deleted...",
 		});
 	} catch (err) {
 		return res.status(500).json({ error: "Internal server error." });

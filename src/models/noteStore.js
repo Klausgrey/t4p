@@ -20,15 +20,26 @@ export const getUserNote = (userId) => {
 };
 
 export const getAllNotes = () => {
-	return notes
-}
-
+	return notes;
+};
 
 export const patchUserNote = (userId, noteId, updates) => {
-	const note = notes.find((n) => n.id === noteId)
-	if (!note) return
-	if (userId !== note.userId) return
+	const note = notes.find((n) => n.id === noteId);
+	if (!note) return;
+	if (userId !== note.userId) return;
 
-	Object.assign(note, updates)
-	return note
-}
+	Object.assign(note, updates);
+	return note;
+};
+
+export const deleteUserNote = (userId, noteId) => {
+	const note = notes.find((n) => n.id === noteId);
+	if (!note) return "NOT FOUND...";
+	if (note.userId !== userId) return "FORBIDDEN...";
+
+	const noteIndex = notes.findIndex((n) => noteId === n.id);
+	if (noteIndex === -1) return "NOT FOUND...";
+
+	notes.splice(noteIndex);
+	return "SUCCESS";
+};

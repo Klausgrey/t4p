@@ -29,6 +29,5 @@ export const getCurrentUser = (userId) => {
 };
 
 export const getAllUsers = () => {
-	return users
-}
-
+	return users;
+};
