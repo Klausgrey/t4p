@@ -1,7 +1,20 @@
 import { v4 } from "uuid";
-const users = [];
+import fs from "fs/promises";
 
-export const createUser = (username, password) => {
+const readUserFromFile = async () => {
+	try {
+		const fileData = await fs.readFile("users.json", "utf8");
+		return JSON.parse(fileData);
+	} catch (err) {
+		return [];
+	}
+};
+const saveUserToFile = async (users) => {
+	const stringData = JSON.stringify(users, null, 2);
+	await fs.writeFile("users.json", stringData, "utf8");
+};
+export const createUser = async (username, password) => {
+	const users = await readUserFromFile();
 	const existing = users.find(
 		(user) => username.toLowerCase() === user.username.toLowerCase(),
 	);
@@ -13,10 +26,12 @@ export const createUser = (username, password) => {
 		createdAt: new Date().toISOString(),
 	};
 	users.push(data);
+	await saveUserToFile(users);
 	return data;
 };
 
-export const getUserPassword = (username) => {
+export const getUserPassword = async (username) => {
+	const users = await readUserFromFile();
 	const data = users.find(
 		(user) => username.toLowerCase() === user.username.toLowerCase(),
 	);
@@ -24,10 +39,12 @@ export const getUserPassword = (username) => {
 	return data;
 };
 
-export const getCurrentUser = (userId) => {
+export const getCurrentUser = async (userId) => {
+	const users = await readUserFromFile();
 	return (data = users.find((user) => userId === user.id));
 };
 
-export const getAllUsers = () => {
+export const getAllUsers = async () => {
+	const users = await readUserFromFile();
 	return users;
 };

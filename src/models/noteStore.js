@@ -31,7 +31,8 @@ export const patchUserNote = (userId, noteId, updates) => {
 	const note = notes.find((n) => n.id === noteId);
 	if (!note) return "NOT FOUND";
 	if (userId !== note.userId) return "FORBIDDEN";
-	if (updates.tag && !ALLOWED_TAGS.includes(updates.tag)) throw new Error("INVALID_TAG");
+	if (updates.tag && !ALLOWED_TAGS.includes(updates.tag))
+		throw new Error("INVALID_TAG");
 	Object.assign(note, updates);
 	return note;
 };
