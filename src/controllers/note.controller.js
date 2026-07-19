@@ -29,9 +29,15 @@ export const create = async (req, res) => {
 
 export const userNote = async (req, res) => {
 	const userId = req.user.id;
+	const { tag } = req.query;
 	try {
-		const data = await getUserNote(userId);
-		res.status(200).json({ status: "success", data });
+		let users = await getUserNote(userId);
+		if (tag) {
+			users = users.filter(
+				(note) => note.tag.toLowerCase() === tag.toLowerCase(),
+			);
+		}
+		res.status(200).json({ status: "success", data: users });
 	} catch (err) {
 		res.status(500).json({ error: "Failed to fetch notes" });
 	}
