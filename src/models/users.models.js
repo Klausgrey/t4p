@@ -10,9 +10,10 @@ const readUserFromFile = async () => {
 	}
 };
 const saveUserToFile = async (users) => {
-	const stringData = JSON.stringify(users, null, 2);
+	const stringData = JSON.stringify(users, null, 4);
 	await fs.writeFile("users.json", stringData, "utf8");
 };
+
 export const createUser = async (username, password) => {
 	const users = await readUserFromFile();
 	const existing = users.find(
@@ -41,7 +42,7 @@ export const getUserPassword = async (username) => {
 
 export const getCurrentUser = async (userId) => {
 	const users = await readUserFromFile();
-	return (data = users.find((user) => userId === user.id));
+	return users.find((user) => userId === user.id);
 };
 
 export const getAllUsers = async () => {
