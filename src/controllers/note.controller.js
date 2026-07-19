@@ -27,7 +27,7 @@ export const create = async (req, res) => {
 	}
 };
 
-export const UserNote = async (req, res) => {
+export const userNote = async (req, res) => {
 	const userId = req.user.id;
 	try {
 		const data = getUserNote(userId);

@@ -1,7 +1,7 @@
 import express from "express";
 import {
 	create,
-	UserNote,
+	userNote,
 	getNotes,
 	patchNote,
 	deleteNote
@@ -12,7 +12,7 @@ import { validate } from "uuid";
 
 const router = express.Router();
 router.post("/", verifytoken, create);
-router.get("/", verifytoken, UserNote);
+router.get("/", verifytoken, userNote);
 router.get("/all", verifytoken, getNotes);
 router.patch("/:id", verifytoken, patchNote);
 router.delete("/:id", validate, deleteNote)
