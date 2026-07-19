@@ -31,7 +31,7 @@ export const createUser = async (username, password) => {
 	return data;
 };
 
-export const getUserPassword = async (username) => {
+export const getUsername = async (username) => {
 	const users = await readUserFromFile();
 	const data = users.find(
 		(user) => username.toLowerCase() === user.username.toLowerCase(),

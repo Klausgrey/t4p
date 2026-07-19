@@ -11,7 +11,7 @@ export const create = async (req, res) => {
 	const { title, body, tag } = req.body;
 
 	try {
-		const data = createNote(userId, title, body, tag);
+		const data = await createNote(userId, title, body, tag);
 		res.status(201).json({
 			message: "note created successfully...",
 			data,
@@ -30,17 +30,17 @@ export const create = async (req, res) => {
 export const userNote = async (req, res) => {
 	const userId = req.user.id;
 	try {
-		const data = getUserNote(userId);
+		const data = await getUserNote(userId);
 		res.status(200).json({ status: "success", data });
 	} catch (err) {
 		res.status(500).json({ error: "Failed to fetch notes" });
 	}
 };
 
-export const getNotes = (req, res) => {
+export const getNotes = async (req, res) => {
 	const userId = req.user.id;
 	try {
-		const user = getAllNotes();
+		const user = await getAllNotes();
 		res.status(200).json({ status: "success", user });
 	} catch (err) {
 		res.status(501).json(err);
@@ -52,9 +52,11 @@ export const patchNote = async (req, res) => {
 	const userId = req.user.id;
 
 	const updates = req.body;
+	if (!updates || Object.keys(updates).length === 0)
+		return res.status(400).json({ error: "Request body cannot be empty" });
 
 	try {
-		const updatedNote = patchUserNote(userId, noteId, updates);
+		const updatedNote = await patchUserNote(userId, noteId, updates);
 		if (updatedNote === "NOT FOUND")
 			return res.status(404).json({ error: "Note not found..." });
 		if (updatedNote === "FORBIDDEN")
@@ -79,7 +81,7 @@ export const deleteNote = async (req, res) => {
 	const userId = req.user.id;
 
 	try {
-		const status = deleteUserNote(userId, noteId);
+		const status = await deleteUserNote(userId, noteId);
 		if (status === "NOT FOUND")
 			return res.status(404).json({ error: "Note not found" });
 		if (status === "FORBIDDEN")

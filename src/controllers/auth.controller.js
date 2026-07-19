@@ -1,6 +1,6 @@
 import {
 	createUser,
-	getUserPassword,
+	getUsername,
 	getCurrentUser,
 	getAllUsers,
 } from "../models/users.models.js";
@@ -13,7 +13,7 @@ export const register = async (req, res) => {
 	const { username, password } = req.body;
 	try {
 		const hashedPassword = await bcrypt.hash(password, 10);
-		const user = createUser(username, hashedPassword);
+		const user = await createUser(username, hashedPassword);
 		if (!user) return res.status(409).json({ error: "User already exists..." });
 		res.status(201).json({
 			message: "user created successfully...",
@@ -28,7 +28,7 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
 	const { username, password } = req.body;
 	try {
-		const user = getUserPassword(username);
+		const user = await getUsername(username);
 		if (!user)
 			return res.status(401).json({ error: "Invalid username or password..." });
 		const match = await bcrypt.compare(password, user.password);
@@ -44,14 +44,14 @@ export const login = async (req, res) => {
 		});
 		res.status(200).json({ message: "user logged in...", token });
 	} catch (err) {
-		res.status(501).json(err);
+		res.status(500).json({error: "there was an error"});
 	}
 };
 
-export const getUsers = (req, res) => {
+export const getUsers = async (req, res) => {
 	const userId = req.user.id;
 	try {
-		const user = getCurrentUser(userId);
+		const user = await getCurrentUser(userId);
 		res
 			.status()
 			.json({ status: "success", id: user.id, username: user.username });
@@ -60,10 +60,10 @@ export const getUsers = (req, res) => {
 	}
 };
 
-export const getAll = (req, res) => {
+export const getAll = async (req, res) => {
 	const userId = req.user.id;
 	try {
-		const user = getAllUsers();
+		const user = await getAllUsers();
 		res.status(200).json({ status: "success", user });
 	} catch (err) {
 		res.status(501).json(err);
