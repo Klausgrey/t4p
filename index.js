@@ -6,12 +6,12 @@
 // and after that the next number should be 0 or 1
 // 8122168624
 // \b(0|\+?234)[7-9][0-1][0-9]{8}\b
+
+const checkNetwork = require("./checkNetwork")
 const details = [
 	"My name is Edosa, my 49815671345 number is 080123456789 2348012345678 ++2348012345678",
 	"07045671345 09012345678 09312345678 8134312272 01242345678 is the 45671345 phone number",
 ];
-
-
 
 const isValidNumber = (phoneNumber) => {
 	const cleanNumber = phoneNumber.split(" ").join("");
@@ -35,20 +35,18 @@ const isValidNumber = (phoneNumber) => {
 	if (number[1] !== "7" && number[1] !== "8" && number[1] !== "9") return false;
 	if (number[2] !== "0" && number[2] !== "1") return false;
 
-	return true;
+	const result = checkNetwork(number)
+	return result;
 };
-// const result = isValidNumber("7122168624");
-// console.log(result);
 
 
-let texts = []
+let texts = [];
 for (let char of details) {
-	texts = char.split(" ")
+	texts = char.split(" ");
 	for (let text of texts) {
-		let isValid = isValidNumber(text)
+		let isValid = isValidNumber(text);
 		if (isValid) {
 			console.log(isValidNumber(text), text);
 		}
-
 	}
 }
