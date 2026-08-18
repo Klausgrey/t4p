@@ -30,13 +30,13 @@ function checkNetwork(phoneNumber) {
 			"0708",
 		],
 		Glo: ["0805", "0807", "0811", "0815", "0905", "0915", "0705"],
-		"9mobile": ["0809", "0817", "0818", "0908", "0909"],
+		// 9mobile: ["0809", "0817", "0818", "0908", "0909"],
 	};
 
 	for (const [network, firstFourNumber] of Object.entries(networks)) {
 		if (firstFourNumber.includes(networkNumber)) return network;
 	}
-	return "unknown number";
+	return null;
 }
 
 module.exports = checkNetwork;

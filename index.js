@@ -46,7 +46,7 @@ for (let char of details) {
 	for (let text of texts) {
 		let isValid = isValidNumber(text);
 		if (isValid) {
-			console.log(isValidNumber(text), text);
+			console.log(isValid, text);
 		}
 	}
 }
