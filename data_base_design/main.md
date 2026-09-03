@@ -12,7 +12,7 @@ In SQL, data types are explicitly declared for columns in a table schema to ensu
 | **Date/Time** | `TIMESTAMP` | 8 bytes | Date + Time combination |
 | **Boolean** | `BOOLEAN` | 1 byte | `TRUE`, `FALSE`, `NULL` |
 
-# Case Study 1: Shop Here — Steps 1-4
+# Case Study 1: Shop Here
 
 ## Step 1: Entities
 
