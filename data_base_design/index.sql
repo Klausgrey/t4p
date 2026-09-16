@@ -69,3 +69,6 @@ SELECT id, tag, MAX(created_at)   FROM notes WHERE user_id = 1 group by id, tag;
 SELECT id, name, MIN(price)        FROM products WHERE category = 'electronics' group by id, name;
 
 SELECT id, name, max(price)        FROM products WHERE category = 'electronics' group by id, name;
+
+
+select * from users 
