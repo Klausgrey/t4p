@@ -57,9 +57,7 @@ ERD created in dbdiagram.io (crow's foot notation): [View ERD](https://dbdiagram
 
 ## Step 5: Normalization
 1. first normal form (1NF)
-- All attributes are atomic (single values) and each table has a primary key.
-all colums across users, accounts, transactions, and user_activity_logs are sinfle atomic values.
-however for the there is a small nuanice for the phone number, in this case, we are storing the phone number as a single string value, which is atomic.
+- all attributes are atomic (single values), and each table has a primary key. every column across users, accounts, transactions, and user_activity_logs contains single atomic values. although phone numbers can be broken down into country and area codes, we intentionally store phone_number as a single string value to maintain atomicity.
 2. second normal form (2NF)
 - 2NF only applies to tables with a composite primary key (a key made of more than one column), where a non-key column could depend on only part of that key rather than the whole thing.
 - none of the tables have composite primary keys, so they are all in 2NF.
