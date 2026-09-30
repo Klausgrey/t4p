@@ -9,6 +9,12 @@ export async function registerUser(req, res) {
 	password = await bcrypt.hash(password, 10);
 
 	try {
+		const existingUser = await db.query(
+			`select * from users where email = ? and phoneNumber = ?`,
+			[email, phoneNumber],
+		);
+		if (existingUser) return res.status(409).json({ message: "user already exists" });
+
 		await db.query(
 			`insert into users (id, firstName, lastName, email, phoneNumber, password) values (?, ?, ?, ?, ?, ?)`,
 			[id, firstName, lastName, email, phoneNumber, password],
