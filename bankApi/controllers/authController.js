@@ -13,7 +13,8 @@ export async function registerUser(req, res) {
 			`select * from users where email = ? and phoneNumber = ?`,
 			[email, phoneNumber],
 		);
-		if (existingUser) return res.status(409).json({ message: "user already exists" });
+		if (existingUser)
+			return res.status(409).json({ message: "user already exists" });
 
 		await db.query(
 			`insert into users (id, firstName, lastName, email, phoneNumber, password) values (?, ?, ?, ?, ?, ?)`,
