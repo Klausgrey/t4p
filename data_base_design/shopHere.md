@@ -106,3 +106,153 @@ erDiagram
         int Quantity
     }
 ```
+# 4. Map the ER Diagram to Tables
+CATEGORY
+
+## CATEGORY
+
+| Attribute         | Key    |
+| ----------------- | ------ |
+| `Category_Number` | **PK** |
+| `Category_Name`   |        |
+
+## ITEM
+
+| Attribute              | Key    |
+| ---------------------- | ------ |
+| `Item_Number`          | **PK** |
+| `Item_Description`     |        |
+| `Item_Category_Number` | **FK** |
+| `Serial_Number`        |        |
+| `Unit_Price`           |        |
+| `Reorder_Level`        |        |
+
+## SUPPLIER
+
+| Attribute              | Key    |
+| ---------------------- | ------ |
+| `Supplier_Code`        | **PK** |
+| `Supplier_Name`        |        |
+| `Address`              |        |
+| `Phone_Number`         |        |
+| `Country_of_Origin`    |        |
+| `Shipment_Mode_Number` | **FK** |
+| `Shipment_Mode`        |        |
+
+## EMPLOYEE
+
+| Attribute     | Key    |
+| ------------- | ------ |
+| `Employee_ID` | **PK** |
+
+## PURCHASE_ORDER
+
+| Attribute            | Key    |
+| -------------------- | ------ |
+| `Purchase_Order_ID`  | **PK** |
+| `Supplier_ID`        | **FK** |
+| `Employee_ID`        | **FK** |
+| `Order_Date`         |        |
+| `Shipment_Date`      |        |
+| `Quantity`           |        |
+| `Shipment_Method_ID` | **FK** |
+| `Freight_Charge`     |        |
+
+## SHIPMENT_METHOD
+
+| Attribute            | Key    |
+| -------------------- | ------ |
+| `Shipment_Method_ID` | **PK** |
+| `Shipment_Method`    |        |
+
+## PURCHASE_ORDER_ITEM
+
+| Attribute           | Key        |
+| ------------------- | ---------- |
+| `Purchase_Order_ID` | **PK, FK** |
+| `Item_Number`       | **PK, FK** |
+| `Quantity`          |            |
+
+---
+
+# STEP 5. Normalize the Tables to 3NF
+
+Final 3NF Tables
+CATEGORY
+
+-------------------------
+- Category_Number (PK)
+- Category_Name
+
+
+ITEM
+-------------------------
+- Item_Number (PK)
+- Item_Description
+- Item_Category_Number (FK)
+- Serial_Number
+- Unit_Price
+- Reorder_Level
+
+
+SUPPLIER
+-------------------------
+- Supplier_Code (PK)
+- Supplier_Name
+- Address
+- Phone_Number
+- Country_of_Origin
+- Shipment_Mode_Number (FK)
+
+
+SHIPMENT_MODE
+-------------------------
+- Shipment_Mode_Number (PK)
+- Shipment_Mode
+
+
+EMPLOYEE
+-------------------------
+- Employee_ID (PK)
+
+
+PURCHASE_ORDER
+-------------------------
+- Purchase_Order_ID (PK)
+- Supplier_ID (FK)
+- Employee_ID (FK)
+- Order_Date
+- Shipment_Date
+- Quantity
+- Shipment_Method_ID (FK)
+- Freight_Charge
+
+
+SHIPMENT_METHOD
+-------------------------
+- Shipment_Method_ID (PK)
+- Shipment_Method
+
+
+PURCHASE_ORDER_ITEM
+-------------------------
+- Purchase_Order_ID (PK, FK)
+- Item_Number (PK, FK)
+- Quantity
+
+## STEP 6. Primary Keys and Foreign Keys
+
+
+
+| Table              | Primary Key (PK)    | Foreign Key (FK)                  |
+| ------------------ | ------------------- | --------------------------------- |
+| **EVENT_TYPE**     | `Event_Type_Code`   | —                                 |
+| **EVENT**          | `Event_Code`        | `Event_Type_Code`, `Employee_ID`  |
+| **EMPLOYEE**       | `Employee_ID`       | —                                 |
+| **ATTENDEE**       | `Attendee_ID`       | —                                 |
+| **FEE_SCHEDULE**   | `Fee_Schedule_ID`   | `Event_ID`                        |
+| **PAYMENT**        | `Payment_ID`        | `Event_Code`, `Payment_Method_ID` |
+| **PAYMENT_METHOD** | `Payment_Method_ID` | —                                 |
+
+``
+ 
