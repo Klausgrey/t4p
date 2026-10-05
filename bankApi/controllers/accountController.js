@@ -2,7 +2,7 @@ import { pool as db } from "../db.js";
 import { v4 as uuidv4 } from "uuid";
 import crypto from "crypto";
 
-export const createAccount = async (req, res) => {
+export async function createAccount(req, res) {
 	const { accountType, currency } = req.body;
 	try {
 		const accountNumber = crypto
@@ -11,7 +11,6 @@ export const createAccount = async (req, res) => {
 			.padStart(10, "0");
 		const id = uuidv4();
 		const userId = req.user.id;
-
 
 		// how to create more than one account for a user?
 		const [[result]] = await db.query(
@@ -36,9 +35,9 @@ export const createAccount = async (req, res) => {
 		console.error(err);
 		res.status(500).json({ message: "error processing request" });
 	}
-};
+}
 
-export const getAccountDetails = async (req, res) => {
+export async function getAccountDetails(req, res) {
 	const userId = req.user.id;
 	try {
 		const [[account]] = await db.query(
@@ -50,4 +49,18 @@ export const getAccountDetails = async (req, res) => {
 		console.error(err);
 		res.status(500).json({ message: "error processing request" });
 	}
-};
+}
+
+export async function getAccountSummary(req, res) {
+	const userId = req.user.id;
+	try {
+		const [[account]] = await db.query(
+			``,
+			[]
+		);
+		res.status(200).json({ account });
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ message: "error processing request" });
+	}
+}
