@@ -27,8 +27,11 @@ create table accounts (
 	foreign key (userId) references users(id)
 )
 
+-- drop TABLE transactions
+
+
 create table transactions (
-	id int auto_increment primary key,
+	id varchar(36) primary key,
 	sourceAccountId varchar(36),
 	destinationAccountId varchar(36),
 	type varchar(20) not null check(type in ('deposit', 'withdrawal', 'transfer')),
@@ -41,9 +44,11 @@ create table transactions (
 	foreign key (destinationAccountId) references accounts(id)
 )
 
+-- drop table user_activity_logs
+
 
 create table user_activity_logs (
-	id int auto_increment primary key,
+	id varchar(36) primary key,
 	userId varchar(36) not null,
 	action varchar(20) not null check(action in ('register', 'login')),
 	ipAddress varchar(45) not null,
