@@ -414,7 +414,6 @@ Return `200` with an array.
 **Middleware:** `authMiddleware`
 
 Use **GROUP BY aggregates** and **correlated subqueries**:
-
 ```sql
 SELECT
     u.full_name, u.email,
@@ -433,7 +432,6 @@ INNER JOIN accounts a ON a.user_id = u.id
 WHERE u.id = ? AND a.is_active = 1
 GROUP BY u.id, u.full_name, u.email;
 ```
-
 Return `200` with the summary object.
 
 ---
@@ -443,7 +441,6 @@ Return `200` with the summary object.
 **Middleware:** `authMiddleware`
 
 Use a **JOIN with a scalar subquery**:
-
 ```sql
 SELECT
     a.id, a.account_number, a.account_type, a.balance,
@@ -456,7 +453,6 @@ FROM accounts a
 INNER JOIN users u ON u.id = a.user_id
 WHERE a.account_number = ?;
 ```
-
 Return `404` if not found. Return `403` if the account belongs to another user.
 
 ---
