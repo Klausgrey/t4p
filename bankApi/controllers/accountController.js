@@ -51,7 +51,40 @@ export async function getAccountDetails(req, res) {
 export async function getAccountSummary(req, res) {
 	const userId = req.user.id;
 	try {
-		const [[account]] = await db.query(``, []);
+		const [[account]] = await db.query(
+			`select
+			u.firstname, u.lastname,
+			count(a.id) as totalAccounts,
+			sum(a.balance) as totalBalance,
+			max(a.balance) as highestBalance,
+			min(a.balance) as lowestBalance,
+
+			(
+			select count(*)
+			from transactions t
+			join accounts src
+			on src.id = t.sourceAccountId
+			where src.userId = u.id
+			) as total_debits,
+
+			(
+			select count(*)
+			from transactions t
+			join accounts dest
+			on dest.id = t.destinationAccountId
+			where dest.userId = u.id
+			) as total_credits
+
+			from users u
+			join accounts a
+			on a.userId = u.id
+			and a.isActive = 1
+			where u.id = ?
+			group by u.id, u.firstName, u.email
+			`,
+			[userId],
+		);
+
 		res.status(200).json({ account });
 	} catch (err) {
 		console.error(err);
