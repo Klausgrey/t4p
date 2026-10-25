@@ -145,11 +145,74 @@ export async function getAccountNumber(req, res) {
 		return res.status(200).json({
 			account: accountDetails,
 		});
-
 	} catch (err) {
 		console.error(err);
 		return res.status(500).json({
 			message: "error processing request",
 		});
+	}
+}
+
+export async function deposit(req, res) {
+	const conn = await db.getConnection();
+	const { accountNumber, amount, description } = req.body;
+	const userId = req.user.id;
+
+	try {
+		await conn.beginTransaction();
+		const [[account]] = await conn.query(
+			`select id, userId, isActive
+			from accounts
+			where accountNumber = ?
+			for update`,
+			[accountNumber],
+		);
+
+		if (!account) {
+			await conn.rollback();
+			return res.status(404).json({ message: "this account was not found" });
+		}
+		if (userId !== account.userId) {
+			await conn.rollback();
+			return res
+				.status(403)
+				.json({ message: "forbidden: you cannot access this account" });
+		}
+		if (!account.isActive) {
+			await conn.rollback();
+			return res.status(400).json({ message: "bad request" });
+		}
+		await conn.query(
+			`update accounts
+			set balance = balance + ?
+			where id = ?`,
+			[amount, account.id],
+		);
+
+		const [result] = await conn.query(
+			`insert into transactions
+			(type, sourceAccountId, destinationAccountId, amount, description)
+			values ('deposit', NULL, ?, ?, ?)`,
+			[account.id, amount, description || null],
+		);
+
+		const [[updated]] = await conn.query(
+			`select balance from accounts where id = ?`,
+			[account.id],
+		);
+
+		await conn.commit();
+
+		return res.status(200).json({
+			message: "deposit successful",
+			balance: updated.balance,
+			transactionId: result.insertId,
+		});
+	} catch (err) {
+		await conn.rollback();
+		console.error(err);
+		res.status(500).json({ message: "error processing request" });
+	} finally {
+		conn.release();
 	}
 }
