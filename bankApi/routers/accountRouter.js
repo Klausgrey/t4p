@@ -5,6 +5,7 @@ import {
 	getAccountSummary,
 	getAccountNumber,
 	deposit,
+	withdraw,
 } from "../controllers/accountController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import {
@@ -24,6 +25,12 @@ router.post(
 	authMiddleware,
 	validate(depositWithdrawSchema),
 	deposit,
+);
+router.post(
+	"/withdraw",
+	authMiddleware,
+	validate(depositWithdrawSchema),
+	withdraw,
 );
 
 export default router;
