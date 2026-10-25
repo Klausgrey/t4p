@@ -216,3 +216,62 @@ export async function deposit(req, res) {
 		conn.release();
 	}
 }
+
+export async function withdraw(req, res) {
+	const conn = await db.getConnection();
+	const { accountNumber, amount, description } = req.body;
+	const userId = req.user.id;
+
+	try {
+		await conn.beginTransaction();
+		const [[account]] = await conn.query(
+			`select id, userId, balance, isActive
+			from accounts
+			where accountNumber = ?
+			for update`,
+			[accountNumber],
+		);
+
+		if (!account) {
+			await conn.rollback();
+			return res.status(404).json({ message: "this account was not found" });
+		}
+		if (account.userId !== userId) {
+			await conn.rollback();
+			return res
+				.status(403)
+				.json({ message: "forbidden: you cannot access this account" });
+		}
+		if (!account.isActive) {
+			await conn.rollback();
+			return res.status(400).json({ message: "this account is not active" });
+		}
+		if (Number(account.balance) < amount) {
+			await conn.rollback();
+			return res.status(422).json({ message: "insufficient funds" });
+		}
+
+		await conn.query(
+			`update accounts
+			set balance = balance - ?
+			where id = ?`,
+			[amount, account.id],
+		);
+
+		await conn.query(
+			`insert into transactions
+			(type, from_account_id, to_account_id, amount, description)
+			values ('withdrawal', ?, NULL, ?, ?)`,
+			[account.id, amount, description || null],
+		);
+
+		await conn.commit();
+		return res.status(200).json({ message: "withdrawal successful" });
+	} catch (err) {
+		await conn.rollback();
+		console.error(err);
+		return res.status(500).json({ message: "something went wrong" });
+	} finally {
+		conn.release();
+	}
+}
