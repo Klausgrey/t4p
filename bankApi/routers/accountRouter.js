@@ -6,11 +6,13 @@ import {
 	getAccountNumber,
 	deposit,
 	withdraw,
+	transfer,
 } from "../controllers/accountController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import {
 	accountSchema,
 	depositWithdrawSchema,
+	transferSchema,
 } from "../validators/accountValidators.js";
 
 import express from "express";
@@ -32,5 +34,6 @@ router.post(
 	validate(depositWithdrawSchema),
 	withdraw,
 );
+router.post("/transfer", authMiddleware, validate(transferSchema), transfer);
 
 export default router;

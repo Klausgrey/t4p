@@ -5,7 +5,9 @@ import crypto from "node:crypto";
 export async function createAccount(req, res) {
 	const { accountType, currency } = req.body;
 	try {
-		const accountNumber = crypto.randomInt(100_000, 1_000_000).toString();
+		const accountNumber = crypto
+			.randomInt(1_000_000_000, 10_000_000_000)
+			.toString();
 		const id = uuidv4();
 		const userId = req.user.id;
 
@@ -260,7 +262,7 @@ export async function withdraw(req, res) {
 
 		await conn.query(
 			`insert into transactions
-			(type, from_account_id, to_account_id, amount, description)
+			(type, sourceAccountId, destinationAccountId, amount, description)
 			values ('withdrawal', ?, NULL, ?, ?)`,
 			[account.id, amount, description || null],
 		);
@@ -273,5 +275,108 @@ export async function withdraw(req, res) {
 		return res.status(500).json({ message: "something went wrong" });
 	} finally {
 		conn.release();
+	}
+}
+
+export async function transfer(req, res) {
+	const { fromAccountNumber, toAccountNumber, amount, description } = req.body;
+	const userId = req.user.id;
+	const conn = await db.getConnection();
+
+	try {
+		await conn.beginTransaction();
+
+		const [[account]] = await conn.query(
+			`
+			select id, userId, accountNumber, balance, isActive
+			from accounts
+			where userId = ?
+			for update
+			`,
+			[userId],
+		);
+
+		if (!account) {
+			await conn.rollback();
+			return res.status(404).json({ message: "not found: account not found" });
+		}
+
+		if (account.accountNumber !== fromAccountNumber) {
+			await conn.rollback();
+			return res.status(403).json({
+				message: "forbidden: you are not allowed to perform this transaction",
+			});
+		}
+
+		if (!account.isActive) {
+			await conn.rollback();
+			return res.status(400).json({
+				message: "bad request: this account isn't active",
+			});
+		}
+
+		const [[receiver]] = await conn.query(
+			`
+			select id, userId, accountNumber, balance, isActive
+			from accounts
+			where accountNumber = ?
+			for update
+			`,
+			[toAccountNumber],
+		);
+		if (!receiver) {
+			await conn.rollback();
+			return res
+				.status(404)
+				.json({ message: "not found: account number not found" });
+		}
+
+		if (!receiver.isActive) {
+			await conn.rollback();
+			return res.status(400).json({
+				message:
+					"bad request: this account you're trying to send funds to isn't active",
+			});
+		}
+
+		if (account.balance < amount) {
+			await conn.rollback();
+			return res
+				.status(422)
+				.json({ message: "you cannot send what you do not have" });
+		}
+
+		await conn.query(
+			`
+			update accounts
+			set balance =  balance - ?
+			where id = ?
+			`,
+			[amount, account.id],
+		);
+
+		await conn.query(
+			`
+			update accounts
+			set balance =  balance + ?
+			where id = ?
+			`,
+			[amount, receiver.id],
+		);
+
+		await conn.query(
+			`
+			insert into transactions
+			(type, sourceAccountId, destinationAccountId, amount, description)
+			value ('transfer', ?, ?, ?, ?)
+			`,
+			[account.id, receiver.id, amount, description || null],
+		);
+		await conn.commit();
+		return res.status(200).json({ message: "transaction successful" });
+	} catch (err) {
+		await conn.rollback();
+		console.error(err);
+		res.status(500).json({ message: "errror processing this request" });
 	}
 }

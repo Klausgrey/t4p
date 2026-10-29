@@ -6,7 +6,7 @@ export const accountSchema = Joi.object({
 })
 
 export const depositWithdrawSchema = Joi.object({
-	account_number: Joi.string().length(10).required(),
+	accountNumber: Joi.string().length(10).required(),
 	amount: Joi.number().greater(0).precision(2).required(),
 	description: Joi.string().max(255).optional(),
 })
