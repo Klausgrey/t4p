@@ -1,6 +1,12 @@
 import { pool as db } from "../db.js";
 import { v4 as uuidv4 } from "uuid";
 import crypto from "node:crypto";
+import { timeStamp } from "node:console";
+
+function generateTransactionRef() {
+	const shortHex = uuidv4().replace(/-/g, "").slice(0, 12).toUpperCase();
+	return `TIX-${shortHex}`;
+}
 
 export async function createAccount(req, res) {
 	const { accountType, currency } = req.body;
@@ -193,9 +199,15 @@ export async function deposit(req, res) {
 
 		const [result] = await conn.query(
 			`insert into transactions
-			(type, sourceAccountId, destinationAccountId, amount, description)
-			values ('deposit', NULL, ?, ?, ?)`,
-			[account.id, amount, description || null],
+			(type, sourceAccountId, destinationAccountId, amount, description, referenceCode, status)
+			values ('deposit', NULL, ?, ?, ?, ?, ?)`,
+			[
+				account.id,
+				amount,
+				description,
+				generateTransactionRef(),
+				"completed" || null,
+			],
 		);
 
 		const [[updated]] = await conn.query(
@@ -262,13 +274,43 @@ export async function withdraw(req, res) {
 
 		await conn.query(
 			`insert into transactions
-			(type, sourceAccountId, destinationAccountId, amount, description)
-			values ('withdrawal', ?, NULL, ?, ?)`,
-			[account.id, amount, description || null],
+			(type, sourceAccountId, destinationAccountId, amount, description, referenceCode, status)
+			values ('withdrawal', ?, NULL, ?, ?, ?, ?)`,
+			[
+				account.id,
+				amount,
+				description,
+				generateTransactionRef(),
+				"completed" || null,
+			],
+		);
+
+		const [[updated]] = await conn.query(
+			`select
+				a.id,
+				a.balance,
+				a.accountNumber,
+				t.referenceCode,
+				t.amount
+			from accounts a
+			join transactions t
+			on a.id = t.sourceAccountId
+			where a.id = ?
+			`,
+			[account.id],
 		);
 
 		await conn.commit();
-		return res.status(200).json({ message: "withdrawal successful" });
+		return res.status(200).json({
+			message: "withdrawal successful",
+			data: {
+				transactionId: updated.referenceCode,
+				accountNumber: updated.accountNumber,
+				amount: updated.amount,
+				previousBalance: account.balance,
+				currentBalance: updated.balance,
+			},
+		});
 	} catch (err) {
 		await conn.rollback();
 		console.error(err);
@@ -317,8 +359,17 @@ export async function transfer(req, res) {
 
 		const [[receiver]] = await conn.query(
 			`
-			select id, userId, accountNumber, balance, isActive
-			from accounts
+			select
+				a.id,
+				a.userId,
+				a.accountNumber,
+				a.balance,
+				a.isActive,
+				u.firstName,
+				u.lastName
+			from accounts a
+			join users u
+			on a.userId = u.id
 			where accountNumber = ?
 			for update
 			`,
@@ -367,13 +418,54 @@ export async function transfer(req, res) {
 		await conn.query(
 			`
 			insert into transactions
-			(type, sourceAccountId, destinationAccountId, amount, description)
-			value ('transfer', ?, ?, ?, ?)
+			(type, sourceAccountId, destinationAccountId, amount, description, referenceCode, status)
+			value ('transfer', ?, ?, ?, ?, ?, ?)
 			`,
-			[account.id, receiver.id, amount, description || null],
+			[
+				account.id,
+				receiver.id,
+				amount,
+				description,
+				generateTransactionRef(),
+				"completed" || null,
+			],
 		);
+
+		const [[updated]] = await conn.query(
+			`select
+				a.id,
+				a.balance,
+				a.accountNumber,
+				t.referenceCode,
+				t.amount,
+				t.description
+			from accounts a
+			join transactions t
+			on a.id = t.sourceAccountId
+			where a.id = ?
+			`,
+			[account.id],
+		);
+
 		await conn.commit();
-		return res.status(200).json({ message: "transaction successful" });
+		return res.status(200).json({
+			message: "transaction successful",
+			data: {
+				referenceCode: updated.referenceCode,
+				amount: updated.amount,
+			},
+			sender: {
+				accountNumber: account.accountNumber,
+				previousBalance: account.balance,
+				currentBalance: updated.balance,
+			},
+			recipient: {
+				receiverFirstName: receiver.firstName,
+				receiverLastName: receiver.lastName,
+				accountNumber: receiver.accountNumber,
+			},
+			description: description,
+		});
 	} catch (err) {
 		await conn.rollback();
 		console.error(err);
